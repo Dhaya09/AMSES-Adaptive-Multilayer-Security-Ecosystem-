@@ -1,0 +1,51 @@
+[2026-04-04 08:39:58] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 08:41:44] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 08:41:57] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 08:42:37] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 08:42:37] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 08:42:38] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 5
+[2026-04-04 08:46:26] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 08:50:16] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 08:50:25] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 08:55:23] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 08:58:08] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 09:14:36] AUTH FAILURE | IP=127.0.0.1 | user=tgk | attempt 1
+[2026-04-04 09:14:37] AUTH FAILURE | IP=127.0.0.1 | user=tgk | attempt 2
+[2026-04-04 09:14:38] AUTH FAILURE | IP=127.0.0.1 | user=tgk | attempt 3
+[2026-04-04 09:14:38] AUTH FAILURE | IP=127.0.0.1 | user=tgk | attempt 4
+[2026-04-04 09:14:39] AUTH FAILURE | IP=127.0.0.1 | user=tgk | attempt 5
+[2026-04-04 09:15:27] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:15:28] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:15:35] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 09:16:17] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:16:18] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:16:18] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:19:51] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 09:20:37] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:20:38] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:20:38] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:20:39] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 09:20:39] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 5
+[2026-04-04 09:25:26] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:25:35] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 09:26:32] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:26:33] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:26:33] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:26:34] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 09:28:36] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 
+[2026-04-04 09:29:20] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:29:20] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:29:21] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:29:21] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 09:29:22] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 5
+[2026-04-04 09:43:26] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:43:26] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:43:27] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:43:27] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 09:43:28] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 5
+[2026-04-04 09:47:08] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 1
+[2026-04-04 09:47:09] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 2
+[2026-04-04 09:47:09] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 3
+[2026-04-04 09:47:10] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 4
+[2026-04-04 09:47:10] AUTH FAILURE | IP=127.0.0.1 | user=admin | attempt 5
+[2026-04-04 10:16:36] AUTH SUCCESS | IP=127.0.0.1 | user=admin | 

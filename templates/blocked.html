@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMSES — Access Denied</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-blocked">
+  <div class="blocked-wrap">
+    <div class="blocked-icon">🚫</div>
+    <h1>ACCESS DENIED</h1>
+    <p class="blocked-ip">IP: <strong>{{ ip }}</strong></p>
+    <p class="blocked-msg">
+      Your IP has been temporarily blocked by the AMSES Automated Firewall.<br>
+      This action was triggered by suspicious activity detection and elevated risk scoring.<br>
+      Please wait for the block duration to expire.
+    </p>
+    <div class="blocked-detail">
+      <span>AMSES Firewall Module — Automated Response Active</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMSES — Secure Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-login">
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+        <span class="nav-logo">⬡</span><span>AMSES</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="lock-icon">🔒</div>
+        <h2>SECURE ACCESS</h2>
+        <p class="login-sub">Authentication Required</p>
+
+        {% if challenge.level == 'elevated' %}
+          <div class="alert-banner alert-medium">⚠️ {{ challenge.message }}</div>
+        {% elif challenge.level == 'blocked' %}
+          <div class="alert-banner alert-high">🚫 {{ challenge.message }}</div>
+        {% endif %}
+      </div>
+
+      <form id="loginForm" autocomplete="off">
+        <div class="form-group">
+          <label for="username">USERNAME</label>
+          <input type="text" id="username" name="username"
+                 placeholder="Enter username" required
+                 {% if challenge.level == 'blocked' %}disabled{% endif %} />
+        </div>
+        <div class="form-group">
+          <label for="password">PASSWORD</label>
+          <input type="password" id="password" name="password"
+                 placeholder="Enter password" required
+                 {% if challenge.level == 'blocked' %}disabled{% endif %} />
+        </div>
+
+        <button type="submit" class="btn-login"
+                {% if challenge.level == 'blocked' %}disabled{% endif %}>
+          AUTHENTICATE
+        </button>
+      </form>
+
+      <div id="loginMsg" class="login-msg hidden"></div>
+
+      <div id="riskMeter" class="risk-meter hidden">
+        <div class="rm-label">RISK SCORE</div>
+        <div class="rm-bar-wrap">
+          <div class="rm-bar" id="rmBar"></div>
+        </div>
+        <div class="rm-val" id="rmVal"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const btn   = document.querySelector(".btn-login");
+      const msg   = document.getElementById("loginMsg");
+      const meter = document.getElementById("riskMeter");
+
+      btn.textContent = "AUTHENTICATING...";
+      btn.disabled = true;
+      msg.className = "login-msg hidden";
+
+      const resp = await fetch("/api/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value,
+        })
+      });
+      const data = await resp.json();
+
+      if (data.success) {
+        msg.textContent = "✓ Authentication successful. Redirecting...";
+        msg.className = "login-msg success";
+        setTimeout(() => window.location.href = "/secure", 800);
+      } else {
+        msg.textContent = "✗ " + (data.error || "Authentication failed");
+        msg.className = "login-msg error";
+        btn.textContent = "AUTHENTICATE";
+        btn.disabled = false;
+
+        if (data.risk !== undefined) {
+          meter.classList.remove("hidden");
+          const pct = Math.min(100, data.risk);
+          document.getElementById("rmBar").style.width = pct + "%";
+          document.getElementById("rmBar").style.background =
+            pct > 66 ? "var(--danger)" : pct > 33 ? "var(--warning)" : "var(--accent)";
+          document.getElementById("rmVal").textContent =
+            `Score: ${pct} | Level: ${pct > 66 ? "HIGH" : pct > 33 ? "MEDIUM" : "LOW"}`;
+        }
+
+        if (data.blocked) {
+          btn.disabled = true;
+          btn.textContent = "BLOCKED";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

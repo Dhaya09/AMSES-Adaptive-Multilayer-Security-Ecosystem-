@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMSES — Secure Data Access</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-secure">
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+        <span class="nav-logo">⬡</span><span>AMSES</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/logout" class="btn-nav">Logout</a>
+    </div>
+  </nav>
+
+  <div class="secure-wrap">
+    <div class="secure-header">
+      <div class="secure-badge">✓ AUTHENTICATED SESSION</div>
+      <h2>SECURE DATA TERMINAL</h2>
+      <div class="session-meta">
+        <span>User: <strong>{{ username }}</strong></span>
+        <span class="risk-pill risk-{{ risk_level|lower }}">{{ risk_level }} RISK</span>
+        <span>Score: <strong>{{ score }}</strong></span>
+        <span>Encryption: <strong>{{ enc_mode }}</strong></span>
+      </div>
+    </div>
+
+    <div class="secure-grid">
+      <div class="sec-panel">
+        <div class="panel-title">🔐 ENCRYPTION STATUS</div>
+        <div class="enc-display">
+          <div class="enc-mode" id="encModeDisplay">{{ enc_mode }}</div>
+          <div class="enc-meta">
+            <div>Risk Level: <span id="riskLvl" class="risk-{{ risk_level|lower }}">{{ risk_level }}</span></div>
+            <div>Risk Score: <span id="riskScore">{{ score }}</span> / 100</div>
+            <div>Key Rotation: <span id="rotationStatus">Active</span></div>
+          </div>
+        </div>
+        <div class="enc-legend">
+          <div class="enc-leg-item leg-low">LOW → AES-128-CBC</div>
+          <div class="enc-leg-item leg-med">MEDIUM → AES-256-CBC</div>
+          <div class="enc-leg-item leg-high">HIGH → AES-256 + RSA-2048</div>
+        </div>
+      </div>
+
+      <div class="sec-panel">
+        <div class="panel-title">📦 SECURE PAYLOAD RETRIEVAL</div>
+        <button class="btn-primary" id="fetchDataBtn" onclick="fetchSecureData()">
+          FETCH ENCRYPTED DATA
+        </button>
+        <div id="secDataLoader" class="hidden loader-text">Encrypting payload...</div>
+      </div>
+    </div>
+
+    <div id="dataOutput" class="hidden">
+      <div class="output-grid">
+        <div class="sec-panel full-width">
+          <div class="panel-title">🔒 ENCRYPTED CIPHERTEXT</div>
+          <div class="code-block" id="ciphertextDisplay"></div>
+          <div class="enc-details" id="encDetailsDisplay"></div>
+        </div>
+        <div class="sec-panel full-width">
+          <div class="panel-title">✅ DECRYPTED DATA (Demo Transparency)</div>
+          <div class="data-table" id="decryptedDisplay"></div>
+        </div>
+        <div id="rsaPanel" class="sec-panel full-width hidden">
+          <div class="panel-title">🔑 RSA PUBLIC KEY (High Risk Mode)</div>
+          <div class="code-block small" id="rsaKeyDisplay"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+  <script>
+     async function fetchSecureData() {
+    const btn = document.getElementById("fetchDataBtn");
+    const loader = document.getElementById("secDataLoader");
+    const output = document.getElementById("dataOutput");
+
+    btn.disabled = true;
+    loader.classList.remove("hidden");
+    output.classList.add("hidden");
+
+    try {
+      // ✅ THIS LINE WAS MISSING / BROKEN
+      const resp = await fetch("/api/secure-data", {
+        method: "GET",
+        credentials: "same-origin"
+      });
+
+      const d = await resp.json();
+
+      loader.classList.add("hidden");
+
+      if (!d.success) {
+        alert("Error: " + (d.error || "Unknown error"));
+        btn.disabled = false;
+        return;
+      }
+
+      // Update risk
+      const rp = d.risk_profile;
+      document.getElementById("encModeDisplay").textContent = rp.encryption_mode;
+      document.getElementById("riskLvl").textContent = rp.level;
+      document.getElementById("riskLvl").className = "risk-" + rp.level.toLowerCase();
+      document.getElementById("riskScore").textContent = rp.score;
+
+      // Ciphertext
+      const enc = d.encrypted;
+      document.getElementById("ciphertextDisplay").innerHTML =
+        `<span class="ct-label">Ciphertext:</span><br>${enc.ciphertext}<br><br>` +
+        `<span class="ct-label">IV:</span> ${enc.iv}`;
+
+      document.getElementById("encDetailsDisplay").innerHTML =
+        `<span class="enc-tag">Mode: ${enc.mode}</span>` +
+        `<span class="enc-tag">Key: ${enc.key_bits}-bit</span>` +
+        `<span class="enc-tag">Time: ${enc.timestamp}</span>` +
+        (enc.rsa_wrapped_key ? `<span class="enc-tag enc-high">RSA Active</span>` : "");
+
+      // Decrypted
+      const dec = d.decrypted_demo;
+      let rows = "";
+      for (const [k, v] of Object.entries(dec)) {
+        rows += `<div class="dt-row"><div class="dt-key">${k}</div><div class="dt-val">${v}</div></div>`;
+      }
+      document.getElementById("decryptedDisplay").innerHTML = rows;
+
+      // RSA
+      if (d.rsa_public_key) {
+        document.getElementById("rsaPanel").classList.remove("hidden");
+        document.getElementById("rsaKeyDisplay").textContent = d.rsa_public_key;
+      } else {
+        document.getElementById("rsaPanel").classList.add("hidden");
+      }
+
+      output.classList.remove("hidden");
+      btn.disabled = false;
+
+    } catch (err) {
+      console.error(err);
+      loader.classList.add("hidden");
+      btn.disabled = false;
+      alert("Something failed: " + err.message);
+    }
+  }
+
+  </script>
+</body>
+</html>

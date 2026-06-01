@@ -1,0 +1,13 @@
+[2026-04-04 08:06:55] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 08:12:48] BLOCKED | IP=127.0.0.1 | reason=High risk: invalid_input
+[2026-04-04 08:15:30] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 08:30:46] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 08:31:28] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 08:42:38] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:14:39] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:16:18] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:20:39] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:26:34] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:29:22] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:43:28] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login
+[2026-04-04 09:47:10] BLOCKED | IP=127.0.0.1 | reason=High risk: failed_login

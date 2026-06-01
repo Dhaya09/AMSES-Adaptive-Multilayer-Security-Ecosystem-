@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMSES — Security Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-dashboard">
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+        <span class="nav-logo">⬡</span><span>AMSES</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <span class="live-dot"></span>
+      <span style="font-size:0.8rem;opacity:0.7">LIVE</span>
+      <a href="/login">Secure Portal</a>
+    </div>
+  </nav>
+
+  <div class="dash-wrap">
+    <!-- ── TOP METRICS ─────────────────────────────── -->
+    <div class="dash-row metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">MAX RISK SCORE</div>
+        <div class="metric-value" id="metricScore">—</div>
+        <div class="metric-sub" id="metricLevel">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">ENCRYPTION MODE</div>
+        <div class="metric-value sm" id="metricEnc">—</div>
+        <div class="metric-sub">Adaptive</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">BLOCKED IPs</div>
+        <div class="metric-value danger" id="metricBlocked">—</div>
+        <div class="metric-sub">Active blocks</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">THREAT IPs</div>
+        <div class="metric-value" id="metricIPs">—</div>
+        <div class="metric-sub">Observed</div>
+      </div>
+    </div>
+
+    <!-- ── RISK GAUGE ──────────────────────────────── -->
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="panel-title">SYSTEM RISK GAUGE</div>
+        <div class="gauge-wrap">
+          <div class="gauge-bar-bg">
+            <div class="gauge-bar" id="gaugeBar"></div>
+          </div>
+          <div class="gauge-labels">
+            <span class="g-low">LOW (0–33)</span>
+            <span class="g-med">MEDIUM (34–66)</span>
+            <span class="g-high">HIGH (67–100)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ALERTS + BLOCKED IPs ───────────────────── -->
+    <div class="dash-row two-col">
+      <div class="dash-panel">
+        <div class="panel-title">🔔 RECENT ALERTS</div>
+        <div class="scroll-list" id="alertsList">
+          <div class="empty-state">No alerts yet</div>
+        </div>
+      </div>
+      <div class="dash-panel">
+        <div class="panel-title">🚫 BLOCKED IPs</div>
+        <div class="scroll-list" id="blockedList">
+          <div class="empty-state">No blocked IPs</div>
+        </div>
+        <div class="panel-actions">
+          <input type="text" id="unblockInput" placeholder="IP to unblock" class="mini-input" />
+          <button onclick="unblockIP()" class="btn-sm">Unblock</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LIVE EVENT STREAM ──────────────────────── -->
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="panel-title">📡 LIVE EVENT STREAM</div>
+        <div class="event-stream" id="eventStream">
+          <div class="empty-state">No events yet — start interacting with the system</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IP THREAT TABLE ────────────────────────── -->
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="panel-title">🌐 IP THREAT MATRIX</div>
+        <div class="table-wrap">
+          <table class="threat-table">
+            <thead>
+              <tr>
+                <th>IP Address</th>
+                <th>Risk Score</th>
+                <th>Level</th>
+                <th>Events</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ipTableBody">
+              <tr><td colspan="5" class="empty-state">No IP data yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DETECTOR STATS ────────────────────────── -->
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="panel-title">🔭 IDS — DETECTOR STATS</div>
+        <div class="table-wrap">
+          <table class="threat-table">
+            <thead>
+              <tr>
+                <th>IP</th>
+                <th>Req/10s</th>
+                <th>Failed Logins</th>
+                <th>Brute Force?</th>
+                <th>Flood?</th>
+              </tr>
+            </thead>
+            <tbody id="detectorTableBody">
+              <tr><td colspan="5" class="empty-state">No detector data yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BLOCK HISTORY ─────────────────────────── -->
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="panel-title">📋 BLOCK HISTORY</div>
+        <div class="scroll-list" id="blockHistoryList">
+          <div class="empty-state">No block history</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>AMSES Dashboard — Auto-refresh every 3s</span>
+  </footer>
+
+  <script src="/static/script.js"></script>
+  <script>
+    const LEVEL_CLASS = { LOW: "low", MEDIUM: "medium", HIGH: "high" };
+
+    function levelBadge(lvl) {
+      return `<span class="risk-pill risk-${(lvl||"low").toLowerCase()}">${lvl||"?"}</span>`;
+    }
+
+    function fmtAlert(a) {
+      const cls = (a.level||"").toLowerCase();
+      return `<div class="evt-row evt-${cls}">
+        <span class="evt-time">${a.timestamp||""}</span>
+        <span class="evt-sig">${a.level||""}</span>
+        <span class="evt-detail">${a.message||""}</span>
+      </div>`;
+    }
+
+    function fmtEvent(e) {
+      const lvl = e.score_after > 66 ? "high" : e.score_after > 33 ? "medium" : "low";
+      return `<div class="evt-row evt-${lvl}">
+        <span class="evt-time">${e.timestamp||""}</span>
+        <span class="evt-ip">${e.ip||""}</span>
+        <span class="evt-sig">${e.signal||""}</span>
+        <span class="evt-score">▲${e.score_after}</span>
+        <span class="evt-detail">${e.detail||""}</span>
+      </div>`;
+    }
+
+    async function refreshDashboard() {
+      try {
+        const resp = await fetch("/api/dashboard");
+        const d = await resp.json();
+
+        // Metrics
+        const score = d.global_max_score || 0;
+        const lvl   = d.global_max_level || "LOW";
+        document.getElementById("metricScore").textContent   = score;
+        document.getElementById("metricScore").className     = "metric-value " + LEVEL_CLASS[lvl];
+        document.getElementById("metricLevel").textContent   = lvl;
+        document.getElementById("metricEnc").textContent     = d.encryption_mode || "—";
+        document.getElementById("metricBlocked").textContent = d.blocked_count || 0;
+        document.getElementById("metricIPs").textContent     = (d.all_ips || []).length;
+
+        // Gauge
+        const bar = document.getElementById("gaugeBar");
+        bar.style.width = Math.min(100, score) + "%";
+        bar.className = "gauge-bar gauge-" + LEVEL_CLASS[lvl];
+
+        // Alerts
+        const alertsEl = document.getElementById("alertsList");
+        if (d.recent_alerts && d.recent_alerts.length) {
+          alertsEl.innerHTML = d.recent_alerts.map(fmtAlert).join("");
+        } else {
+          alertsEl.innerHTML = '<div class="empty-state">No alerts yet</div>';
+        }
+
+        // Blocked IPs
+        const blockedEl = document.getElementById("blockedList");
+        if (d.blocked_ips && d.blocked_ips.length) {
+          blockedEl.innerHTML = d.blocked_ips.map(b =>
+            `<div class="evt-row evt-high">
+              <span class="evt-ip">${b.ip}</span>
+              <span class="evt-detail">⏱ ${b.remaining_seconds}s remaining</span>
+              <span class="evt-time">until ${b.unblock_at}</span>
+            </div>`
+          ).join("");
+        } else {
+          blockedEl.innerHTML = '<div class="empty-state">No blocked IPs</div>';
+        }
+
+        // Event stream
+        const streamEl = document.getElementById("eventStream");
+        if (d.recent_events && d.recent_events.length) {
+          streamEl.innerHTML = d.recent_events.map(fmtEvent).join("");
+        } else {
+          streamEl.innerHTML = '<div class="empty-state">No events — interact with the system</div>';
+        }
+
+        // IP Table
+        const tbody = document.getElementById("ipTableBody");
+        if (d.all_ips && d.all_ips.length) {
+          tbody.innerHTML = d.all_ips.map(ip => {
+            const blocked = (d.blocked_ips||[]).some(b => b.ip === ip.ip);
+            return `<tr class="${ip.level === "HIGH" ? "row-danger" : ""}">
+              <td class="mono">${ip.ip}</td>
+              <td><div class="score-bar-wrap"><div class="score-bar score-${ip.level.toLowerCase()}" style="width:${ip.score}%"></div><span>${ip.score}</span></div></td>
+              <td>${levelBadge(ip.level)}</td>
+              <td>${ip.event_count}</td>
+              <td>${blocked ? '<span class="badge-blocked">BLOCKED</span>' : '<span class="badge-ok">ACTIVE</span>'}</td>
+            </tr>`;
+          }).join("");
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No IP data yet</td></tr>';
+        }
+
+        // Detector table
+        const dtbody = document.getElementById("detectorTableBody");
+        if (d.detector_stats && d.detector_stats.length) {
+          dtbody.innerHTML = d.detector_stats.map(s =>
+            `<tr>
+              <td class="mono">${s.ip}</td>
+              <td>${s.request_rate_10s}</td>
+              <td>${s.failed_logins}</td>
+              <td>${s.brute_force_suspect ? '<span class="badge-warn">YES</span>' : 'No'}</td>
+              <td>${s.flood_suspect ? '<span class="badge-warn">YES</span>' : 'No'}</td>
+            </tr>`
+          ).join("");
+        } else {
+          dtbody.innerHTML = '<tr><td colspan="5" class="empty-state">No data</td></tr>';
+        }
+
+        // Block history
+        const bhEl = document.getElementById("blockHistoryList");
+        if (d.block_history && d.block_history.length) {
+          bhEl.innerHTML = d.block_history.map(b =>
+            `<div class="evt-row evt-high">
+              <span class="evt-time">${b.blocked_at}</span>
+              <span class="evt-ip">${b.ip}</span>
+              <span class="evt-detail">${b.reason}</span>
+              <span class="evt-sig">${b.duration_seconds}s block</span>
+            </div>`
+          ).join("");
+        } else {
+          bhEl.innerHTML = '<div class="empty-state">No block history</div>';
+        }
+
+      } catch(e) {
+        console.error("Dashboard refresh error:", e);
+      }
+    }
+
+    async function unblockIP() {
+      const ip = document.getElementById("unblockInput").value.trim();
+      if (!ip) return;
+      const resp = await fetch("/api/admin/unblock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ip })
+      });
+      const d = await resp.json();
+      alert(d.message);
+      document.getElementById("unblockInput").value = "";
+      refreshDashboard();
+    }
+
+    refreshDashboard();
+    setInterval(refreshDashboard, 3000);
+  </script>
+</body>
+</html>
