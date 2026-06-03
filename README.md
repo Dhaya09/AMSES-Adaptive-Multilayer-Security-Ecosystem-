@@ -520,53 +520,6 @@ Implementing login escalation (standard → elevated → blocked) with no persis
 
 ---
 
-## Contributors
-
-| Name | Registration Number |
-|---|---|
-| Contributor 1 | 23BIT0214 |
-| Contributor 2 | 23BIT0443 |
-
----
-
 ## License
 
-This project is licensed under the MIT License.
-
-```
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
----
-
-## Acknowledgements
-
-- [Flask](https://flask.palletsprojects.com/) — lightweight WSGI web framework
-- [PyCryptodome](https://pycryptodome.readthedocs.io/) — AES encryption primitives
-- [cryptography](https://cryptography.io/) — RSA-2048 and asymmetric key operations
-- [Flask-JWT-Extended](https://flask-jwt-extended.readthedocs.io/) — JWT management
-- [Flask-Limiter](https://flask-limiter.readthedocs.io/) — request rate limiting
-- [bcrypt](https://pypi.org/project/bcrypt/) — secure password hashing
-- VIT University — academic context and project supervision
-
----
-
-## Contact Information
-
-For questions, issues, or collaboration inquiries, please open a GitHub Issue on this repository or reach out via the contributor registration numbers listed above through your institution.
-
-> **Note:** The demo credentials (`admin` / `SecurePass@123`) and attack simulation scripts are strictly for local educational use. Do not deploy this application with `DEBUG=True` or expose it publicly without a proper production configuration.
+Open Source.
